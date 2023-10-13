@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="BealCalculator.cpp" />
     <ClCompile Include="CommandLineManager.cpp" />
+    <ClCompile Include="FileOperator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Question.cpp" />
   </ItemGroup>

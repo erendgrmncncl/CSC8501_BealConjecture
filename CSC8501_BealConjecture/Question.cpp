@@ -11,14 +11,19 @@ namespace {
 }
 
 Question::Question(const char* questionText, const char* answersText){
-    _questionText = (char*)questionText;
-    parseAnswerTextToBealData(answersText);
+    _questionText = questionText;
+    if(answersText != nullptr)
+        parseAnswerTextToBealData(answersText);
+}
+
+const char* Question::getQuestionText(){
+    return _questionText;
 }
 
 void Question::parseAnswerTextToBealData(const char* answersText){
     int values[6] = { 0 };
 
-    int parsed = sscanf(answersText, "%*d: %d, %d, %d, %d, %d, %d",
+    int parsed = sscanf_s(answersText, "%*d: %d, %d, %d, %d, %d, %d",
         &values[A_INDEX], &values[X_INDEX], &values[B_INDEX],
         &values[Y_INDEX], &values[C_INDEX], &values[Z_INDEX]);
     

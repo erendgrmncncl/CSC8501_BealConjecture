@@ -1,0 +1,8 @@
+Write a C++ program to find the first five distinct, lowest BNTs that satisfy the Beal Conjecture. Your program should have a command-line interface for user interaction. Show and evaluate the equations that derive these BNTs.
+Extend your program to find the first five distinct BNTs that are prime numbers.
+Further extend your program to find BNTs where A, B, and C are within the range of 3 to 20, and x, y, and z are within the scope of 3 to 15. Show and evaluate the equations that derive these BNTs.
+Develop your program further to write and read outputs to file. This will allow students to check each others’ solutions are correct regarding the preceding three questions.
+Extend your program to find the first ten distinct BNTs that are composite numbers.
+Extend your program to find the BNTs that are square numbers between 1000 and 100000.
+Extend your program to generate an ASCII represented histogram of BNT occurrences between a minimum and a maximum value as specified by a user.
+Find the highest BNT you can and display it with the equations that derive it. However, A, B, and C must all be greater than 2 for this task.
