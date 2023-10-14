@@ -3,6 +3,8 @@
 #include <fstream>
 #include <string>
 
+#include "BealCalculator.h"
+
 const char* FileOperator::getTextInFile(const char* fileName){
     std::ifstream file(fileName);
     if (!file.is_open())
@@ -23,7 +25,7 @@ const char* FileOperator::getTextInFile(const char* fileName){
     return result;
 }
 
-std::vector<const char*> FileOperator::seperateQuestions(const char* questionsText){
+std::vector<const char*> FileOperator::seperateLines(const char* questionsText){
 
     std::vector<const char*> lines;
 
@@ -63,7 +65,19 @@ std::vector<const char*> FileOperator::seperateQuestions(const char* questionsTe
     return lines;
 }
 
-const char* FileOperator::seperateAnswers(const char* questionsText)
-{
-    return nullptr;
+void FileOperator::createAnswersFile(int questionNumber, const std::vector<BealData*>& answers){
+    std::string filename = "Answer" + std::to_string(questionNumber) + ".txt";
+    std::ofstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Error opening file for writing." << std::endl;
+        return;
+    }
+
+    for (BealData* data : answers) {
+        file << data->getBealTotalNumber() << ":" << data->A << "," << data->B << "," << data->C << "," << data->x << "," << data->y << "," << data->z << std::endl;
+    }
+
+    file.close();
+    std::cout << "File " << filename << " created successfully." << std::endl;
 }

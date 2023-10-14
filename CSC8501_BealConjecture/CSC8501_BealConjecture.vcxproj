@@ -132,12 +132,14 @@
     <ClCompile Include="FileOperator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Question.cpp" />
+    <ClCompile Include="QuestionOne.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BealCalculator.h" />
     <ClInclude Include="CommandLineManager.h" />
     <ClInclude Include="FileOperator.h" />
     <ClInclude Include="Question.h" />
+    <ClInclude Include="QuestionOne.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

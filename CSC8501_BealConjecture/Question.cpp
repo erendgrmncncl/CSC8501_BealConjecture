@@ -10,14 +10,26 @@ namespace {
     constexpr const int Z_INDEX = 5;
 }
 
-Question::Question(const char* questionText, const char* answersText){
+Question::Question(const char* questionText, std::vector<const char*>& answers, BealCalculator& bealCalculator){
     _questionText = questionText;
-    if(answersText != nullptr)
-        parseAnswerTextToBealData(answersText);
+    _bealCalculator = &bealCalculator;
+    for (auto* answer : answers) {
+        if (answer != nullptr){
+            parseAnswerTextToBealData(answer);
+        }
+    }
+    
 }
 
 const char* Question::getQuestionText(){
     return _questionText;
+}
+
+std::vector<BealData*>& Question::getAnswers(){
+    return _answers;
+}
+
+void Question::findAnswer(){
 }
 
 void Question::parseAnswerTextToBealData(const char* answersText){
@@ -27,5 +39,7 @@ void Question::parseAnswerTextToBealData(const char* answersText){
         &values[A_INDEX], &values[X_INDEX], &values[B_INDEX],
         &values[Y_INDEX], &values[C_INDEX], &values[Z_INDEX]);
     
-    _bealData = new BealData(values[A_INDEX], values[X_INDEX], values[B_INDEX], values[Y_INDEX], values[C_INDEX], values[Z_INDEX]);
+    BealData* answer = new BealData(values[A_INDEX], values[X_INDEX], values[B_INDEX], values[Y_INDEX], values[C_INDEX], values[Z_INDEX]);
+    _answers.push_back(answer);
 }
+
