@@ -1,5 +1,4 @@
 #include "BealCalculator.h"
-
 #include <iostream>
 #include <cmath>
 #include <algorithm>
@@ -24,7 +23,9 @@ void BealData::printBealData(){
 }
 
 bool BealData::operator==(const BealData& other) const{
-	return getBealTotalNumber() == other.getBealTotalNumber();
+	int bnt = getBealTotalNumber();
+	int otherBnt = other.getBealTotalNumber();
+	return bnt == otherBnt;
  }
 
 BealCalculator::BealCalculator()
@@ -50,8 +51,8 @@ bool BealCalculator::isNumberSetFitsBealConjecture(int A, int B, int C, int x, i
 		return false;
 	}
 
-	int axby = pow(A, x) + pow(B, y);
-	int cz = pow(C, z);
+	long long axby = pow(A, x) + pow(B, y);
+	long long cz = pow(C, z);
 
 	return axby == cz;
 }
@@ -73,26 +74,54 @@ bool BealCalculator::isPrimeNumber(int num)
 	return is_prime;
 }
 
-void BealCalculator::checkAndAddBNTToMinimumVec(std::vector<BealData>& bnts, BealData& bnt, int maxSize){
-	if (bnts.size() < maxSize) {
-		if (std::find(bnts.begin(), bnts.end(), bnt) == bnts.end()){
-			bnts.push_back(bnt);
-		}
+bool BealCalculator::isCompositeNumber(int num){
+	if (num <= 1) {
+		return false; // 0 and 1 are not composite numbers
+	}
 
+	for (int i = 2; i <= num / 2; i++) {
+		if (num % i == 0) {
+			return true; // It has a factor other than 1 and itself, so it's composite
+		}
+	}
+
+	return false; // It's not divisible by any number other than 1 and itself, so it's not composite
+}
+
+bool BealCalculator::isSquareNumber(int num)
+{
+	if (num < 0) {
+		return false;  // Negative numbers cannot be square numbers
+	}
+
+	int squareRoot = static_cast<int>(std::sqrt(num));
+	return squareRoot * squareRoot == num;
+}
+
+void BealCalculator::checkAndAddBNTToMinimumVec(std::vector<BealData>& bnts, BealData& bnt, int maxSize){
+
+	if (std::find(bnts.begin(), bnts.end(), bnt) == bnts.end()) {
+		if (bnts.size() < maxSize) 
+			bnts.push_back(bnt);
+		else
+		{
+			//TODO(eren.degirmenci): remove leak
+			BealData* tempBealData = nullptr;
+			for (int i = 0; i < maxSize; i++) {
+				if (tempBealData == nullptr && bnts[i].getBealTotalNumber() > bnt.getBealTotalNumber()) {
+					tempBealData = new BealData (bnts[i].A, bnts[i].B, bnts[i].C, bnts[i].x, bnts[i].y, bnts[i].z);
+					bnts[i] = bnt;
+				}
+				else if (tempBealData != nullptr && bnts[i].getBealTotalNumber() > tempBealData->getBealTotalNumber()) {
+					BealData* newTempBealData = new BealData(bnts[i].A, bnts[i].B, bnts[i].C, bnts[i].x, bnts[i].y, bnts[i].z);
+					bnts[i] = (*tempBealData);
+					tempBealData = newTempBealData;
+				}
+			}
+		}
+	}
+	else
 		return;
-	}
-	BealData* tempBealData = nullptr;
-	for (int i = 0; i < maxSize; i++){
-		if (tempBealData == nullptr && bnts[i].getBealTotalNumber() > bnt.getBealTotalNumber()){
-			tempBealData = &bnts[i];
-			bnts[i] = bnt;
-		}
-		else if(tempBealData != nullptr && bnts[i].getBealTotalNumber() > tempBealData->getBealTotalNumber()){
-			BealData* newTempBealData = &bnts[i];
-			bnts[i] = (*tempBealData);
-			tempBealData = newTempBealData;
-		}
-	}
 }
 
 int BealCalculator::calculateBealTotalNumber(BealData& data){

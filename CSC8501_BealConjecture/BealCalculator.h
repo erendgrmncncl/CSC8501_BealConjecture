@@ -21,7 +21,10 @@ public:
 	bool haveCommonPrimeFactor(int numOne, int numTwo);
 	bool isNumberSetFitsBealConjecture(int A, int B, int C, int x, int y, int z);
 	bool isPrimeNumber(int num);
+	bool isCompositeNumber(int num);
+	bool isSquareNumber(int num);
 	void checkAndAddBNTToMinimumVec(std::vector<BealData>& bnts, BealData& bnt, int maxSize);
+
 private:
 	int calculateBealTotalNumber(BealData& data);
 	int getGreatestCommonDivisior(int numOne, int numTwo);

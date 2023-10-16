@@ -132,7 +132,11 @@
     <ClCompile Include="FileOperator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Question.cpp" />
+    <ClCompile Include="QuestionFive.cpp" />
     <ClCompile Include="QuestionOne.cpp" />
+    <ClCompile Include="QuestionSix.cpp" />
+    <ClCompile Include="QuestionSix.h" />
+    <ClCompile Include="QuestionThree.cpp" />
     <ClCompile Include="QuestionTwo.cpp" />
     <ClCompile Include="QuestionTwo.h" />
   </ItemGroup>
@@ -140,8 +144,11 @@
     <ClInclude Include="BealCalculator.h" />
     <ClInclude Include="CommandLineManager.h" />
     <ClInclude Include="FileOperator.h" />
+    <ClInclude Include="IsPrimeTemplate.h" />
     <ClInclude Include="Question.h" />
+    <ClInclude Include="QuestionFive.h" />
     <ClInclude Include="QuestionOne.h" />
+    <ClInclude Include="QuestionThree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

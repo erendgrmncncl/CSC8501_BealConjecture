@@ -39,21 +39,17 @@ std::vector<const char*> FileOperator::seperateLines(const char* questionsText){
     while (*end != '\0') {
         if (*end == '\n' || *end == '\r') {
             if (start != end) {
-                // Calculate the length of the line
                 size_t length = end - start;
-                // Allocate memory for the line and copy it using strncpy_s
                 char* line = new char[length + 1];
                 strncpy_s(line, length + 1, start, length);
                 line[length] = '\0';
-                // Add the line to the vector
                 lines.push_back(line);
             }
-            start = end + 1; // Move start to the next character after newline
+            start = end + 1;
         }
         end++;
     }
 
-    // Handle the last line (if it doesn't end with a newline)
     if (start != end) {
         size_t length = end - start;
         char* line = new char[length + 1];

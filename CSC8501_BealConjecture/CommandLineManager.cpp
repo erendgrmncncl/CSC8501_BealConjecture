@@ -4,7 +4,11 @@
 #include "BealCalculator.h"
 #include "QuestionOne.h"
 #include "QuestionTwo.h"
+#include "QuestionThree.h"
+#include "QuestionFive.h"
+#include "QuestionSix.h"
 #include "FileOperator.h"
+
 
 namespace {
 	constexpr const int MAIN_MENU_EXIT_SELECTION = 2;
@@ -27,10 +31,10 @@ void CommandLineManager::initQuestionInitMap(){
 	_questionInitMap = {
 		{1, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}},
 		{2, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionTwo(questionText, choices, calculator);}},
-		{3, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}},
+		{3, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionThree(questionText, choices, calculator);}},
 		{4, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}},
-		{5, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}},
-		{6, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}},
+		{5, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionFive(questionText, choices, calculator);}},
+		{6, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionSix(questionText, choices, calculator);}},
 		{7, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}},
 		{8, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}}
 	};
