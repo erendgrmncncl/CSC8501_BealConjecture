@@ -18,7 +18,6 @@ Question::Question(const char* questionText, std::vector<const char*>& answers, 
             parseAnswerTextToBealData(answer);
         }
     }
-    
 }
 
 const char* Question::getQuestionText(){
