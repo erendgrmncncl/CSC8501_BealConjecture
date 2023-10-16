@@ -3,6 +3,7 @@
 #include "Question.h"
 #include "BealCalculator.h"
 #include "QuestionOne.h"
+#include "QuestionTwo.h"
 #include "FileOperator.h"
 
 namespace {
@@ -25,7 +26,7 @@ void CommandLineManager::handleCommandLine()
 void CommandLineManager::initQuestionInitMap(){
 	_questionInitMap = {
 		{1, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}},
-		{2, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}},
+		{2, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionTwo(questionText, choices, calculator);}},
 		{3, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}},
 		{4, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}},
 		{5, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}},

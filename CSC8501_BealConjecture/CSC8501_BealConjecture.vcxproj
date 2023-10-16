@@ -133,6 +133,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Question.cpp" />
     <ClCompile Include="QuestionOne.cpp" />
+    <ClCompile Include="QuestionTwo.cpp" />
+    <ClCompile Include="QuestionTwo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BealCalculator.h" />

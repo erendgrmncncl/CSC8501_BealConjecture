@@ -33,6 +33,12 @@
     <ClCompile Include="QuestionOne.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QuestionTwo.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestionTwo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BealCalculator.h">
