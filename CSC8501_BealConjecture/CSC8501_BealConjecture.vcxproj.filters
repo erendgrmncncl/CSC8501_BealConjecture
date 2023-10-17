@@ -77,5 +77,8 @@
     <ClInclude Include="QuestionFive.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BigInt.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include "BigInt.hpp"
 
 BealData::BealData(int A, int B, int C, int x, int y, int z){
 	this->A = A;
@@ -33,28 +34,48 @@ BealCalculator::BealCalculator()
 }
 
 bool BealCalculator::haveCommonPrimeFactor(int numOne, int numTwo){
-	int commonFactor = getGreatestCommonDivisior(numOne, numTwo);
-
-	while (commonFactor > 1) {
-		if (numOne % commonFactor == 0 && numTwo % commonFactor == 0) {
-			return true;
-		}
-		numOne /= commonFactor;
-		commonFactor = getGreatestCommonDivisior(numOne, commonFactor);
+	while (numTwo != 0) {
+		int temp = numTwo;
+		numTwo = numOne % numTwo;
+		numOne = temp;
 	}
+	return numOne > 1;
+}
 
-	return false;
+bool BealCalculator::haveCommonPrimeFactor(BigInt& numOne, BigInt& numTwo){
+	
+	while (numTwo != 0) {
+		BigInt temp = numTwo;
+		numTwo = numOne % numTwo;
+		numOne = temp;
+	}
+	return numOne > 1;
 }
 
 bool BealCalculator::isNumberSetFitsBealConjecture(int A, int B, int C, int x, int y, int z){
-	if ( !haveCommonPrimeFactor(A,B) || !haveCommonPrimeFactor(A,C)  || !haveCommonPrimeFactor(B,C)){
-		return false;
+	long long maxLongLongValue = std::numeric_limits<long long>::max();
+	double logMaxLongLong = log(maxLongLongValue);
+
+	if (isOverflowHappeningInPow(A,x) || isOverflowHappeningInPow(B,y) || isOverflowHappeningInPow(C,z)){
+		return isNumberSetFitsBealConjectureBigInt(A, B, C, x, y, z);
 	}
 
-	long long axby = pow(A, x) + pow(B, y);
-	long long cz = pow(C, z);
+	unsigned long long axby = pow(A, x) + pow(B, y);
+	unsigned long long cz = pow(C, z);
 
 	return axby == cz;
+}
+
+bool BealCalculator::isNumberSetFitsBealConjectureBigInt(int A, int B, int C, int x, int y, int z){
+	BigInt bigA = A;
+	BigInt bigB = B;
+	BigInt bigC = C;
+
+	BigInt axby = pow(bigA, x) + pow(bigB, y);
+	BigInt cz = pow(bigC, z);
+	bool res = axby == cz;
+
+	return res;
 }
 
 bool BealCalculator::isPrimeNumber(int num)
@@ -135,4 +156,20 @@ int BealCalculator::getGreatestCommonDivisior(int numOne, int numTwo){
 		numOne = temp;
 	}
 	return numOne;
+}
+
+bool BealCalculator::isOverflowHappeningInPow(int base, int exponent){
+	int iteration = 0;
+	long long baseConversion = base;
+	long long result = base;
+	while (iteration != exponent){
+		long long tempRes = result;
+		result *= baseConversion;
+
+		if (result / baseConversion != tempRes){
+			return true;
+		}
+		iteration++;
+	}
+	return false;
 }
