@@ -31,5 +31,6 @@ public:
 	int getGreatestCommonDivisior(int numOne, int numTwo);
 private:
 	bool isOverflowHappeningInPow(int base, int exponent);
+	bool isOverflowHappeningInSum(int firstNum, int secondNum);
 	int calculateBealTotalNumber(BealData& data);
 };

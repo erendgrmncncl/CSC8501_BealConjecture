@@ -59,11 +59,17 @@ bool BealCalculator::isNumberSetFitsBealConjecture(int A, int B, int C, int x, i
 	if (isOverflowHappeningInPow(A,x) || isOverflowHappeningInPow(B,y) || isOverflowHappeningInPow(C,z)){
 		return isNumberSetFitsBealConjectureBigInt(A, B, C, x, y, z);
 	}
+	unsigned long long ax = pow(A, x);
+	unsigned long long by = pow(B, y);
+	if (!isOverflowHappeningInSum(ax,by)){
+		unsigned long long axby = ax + by;
+		unsigned long long cz = pow(C, z);
 
-	unsigned long long axby = pow(A, x) + pow(B, y);
-	unsigned long long cz = pow(C, z);
+		return axby == cz;
+	}
 
-	return axby == cz;
+	return isNumberSetFitsBealConjectureBigInt(A, B, C, x, y, z);
+
 }
 
 bool BealCalculator::isNumberSetFitsBealConjectureBigInt(int A, int B, int C, int x, int y, int z){
@@ -172,4 +178,12 @@ bool BealCalculator::isOverflowHappeningInPow(int base, int exponent){
 		iteration++;
 	}
 	return false;
+}
+
+bool BealCalculator::isOverflowHappeningInSum(int firstNum, int secondNum){
+	if (firstNum == 0 || secondNum == 0){
+		return false;
+	}
+	int sum = firstNum + secondNum;
+	return sum - firstNum == secondNum;
 }
