@@ -1,3 +1,4 @@
+#pragma once
 #include "Question.h"
 
 class QuestionTwo : public Question {

@@ -8,6 +8,8 @@
 #include "QuestionFive.h"
 #include "QuestionSix.h"
 #include "FileOperator.h"
+#include <algorithm>   // for std::sort
+#include <functional>  // for std::greater
 
 
 namespace {
@@ -94,10 +96,18 @@ void CommandLineManager::handleQuestionUI(int selectedQuestionIndex){
 			selectedQuestion->findAnswer();
 			_fileOperator->createAnswersFile(selectedQuestionIndex + 1, answers);
 		}
-
+		std::vector<int> answersNumVec;
+		for (int i = 0; i < answers.size(); i++)
+		{
+			answersNumVec.push_back(answers[i]->getBealTotalNumber());
+		}
+		std::sort(answersNumVec.begin(), answersNumVec.end(), std::greater<int>());
 		for (auto answer : answers) {
+			//std::cout << answer << std::endl;
+			
 			answer->printBealData();
 		}
+		std::cout << "Answer count: " << answers.size() << std::endl;
 
 		std::cout << "Enter any key to turn back to questions menu" << std::endl;
 		std::cin >> key;
