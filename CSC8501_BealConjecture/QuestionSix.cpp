@@ -49,25 +49,37 @@ void QuestionSix::checkIsSquareNumberBNT(std::vector<int> squareNumbers, std::ve
     int xValue = 0;
     int yValue = 0;
     int zValue = 0;
-
+    int aValue = 0;
+    int bValue = 0;
+    int cValue = 0;
     for (int squareNumber : squareNumbers) {
         bool isFittingToBealConjecture = false;
         
         if (isNumberInFormatPowerOfTwo(squareNumber)){
             isFittingToBealConjecture = true;
-            xValue = squareNumber - 1;
+            int n = (squareNumber - 7) / 3;
+            xValue = n;
             yValue = xValue;
-            zValue = squareNumber;
+            zValue = n +1;
+
+            aValue = 2;
+            bValue = 2;
+            cValue = 2;
         }
         else if (isNumberInFormatPowerOfSixteen(squareNumber)) {
             isFittingToBealConjecture = true;
-            xValue = 4 * squareNumber - 1;
+            int n = (squareNumber -18) / 9;
+            xValue = 4 * n - 1;
             yValue = xValue;
-            zValue = squareNumber;
+            zValue = n;
+
+            aValue = 2;
+            bValue = 2;
+            cValue = 16;
         }
 
         if (isFittingToBealConjecture){
-            BealData bealData(2, 2, 16, xValue, yValue, zValue);
+            BealData bealData(aValue, bValue, cValue, xValue, yValue, zValue);
             bnts.push_back(bealData);
         }
 
