@@ -2,8 +2,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-
 #include "BealCalculator.h"
+
+namespace {
+    constexpr const char* ANSWERS_FILE_NAME_PREFIX = "Answer";
+    constexpr const char* ANSWER_FILE_EXTENSION = ".txt";
+}
 
 const char* FileOperator::getTextInFile(const char* fileName){
     std::ifstream file(fileName);
@@ -61,7 +65,7 @@ std::vector<const char*> FileOperator::seperateLines(const char* questionsText){
     return lines;
 }
 
-void FileOperator::createAnswersFile(int questionNumber, const std::vector<BealData*>& answers){
+void FileOperator::createAnswersFile(int questionNumber, const std::vector<BealData>& answers){
     std::string filename = "Answer" + std::to_string(questionNumber) + ".txt";
     std::ofstream file(filename);
 
@@ -70,10 +74,23 @@ void FileOperator::createAnswersFile(int questionNumber, const std::vector<BealD
         return;
     }
 
-    for (BealData* data : answers) {
-        file << data->getBealTotalNumber() << ":" << data->A << "," << data->B << "," << data->C << "," << data->x << "," << data->y << "," << data->z << std::endl;
+    for (auto& data : answers) {
+        file << data.getBealTotalNumber() << ":" << data.A << "," << data.B << "," << data.C << "," << data.x << "," << data.y << "," << data.z << std::endl;
     }
 
     file.close();
     std::cout << "File " << filename << " created successfully." << std::endl;
+}
+
+void FileOperator::parseAnswersToLines(std::vector<std::vector<const char*>>& parsedAnswerTexts, int questionCount){
+    for (int i = 0; i < questionCount; i++) {
+        char fileName[50];
+        strcpy_s(fileName, sizeof(fileName), (char*)ANSWERS_FILE_NAME_PREFIX);
+        std::string questionNumber = std::to_string(i + 1);
+        const char* numbertxt = questionNumber.c_str();
+        strcat_s(fileName, sizeof(fileName), numbertxt);
+        strcat_s(fileName, sizeof(fileName), ANSWER_FILE_EXTENSION);
+        const char* answerTxt = getTextInFile(fileName);
+        parsedAnswerTexts.push_back(seperateLines(answerTxt));
+    }
 }

@@ -83,3 +83,12 @@ int getGreatestCommonDivisior(T numOne, T numTwo) {
 	}
 	return numOne;
 }
+
+template<typename T>
+long long getPow(T base, T exponent) {
+	long long res = 1;
+	for (int i = 0; i < exponent; i++) {
+		(res) *= base;
+	}
+	return res;
+}

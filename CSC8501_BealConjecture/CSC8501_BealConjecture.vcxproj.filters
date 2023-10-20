@@ -51,6 +51,12 @@
     <ClCompile Include="QuestionSix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QuestionSeven.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestionFour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BealCalculator.h">
@@ -71,13 +77,19 @@
     <ClInclude Include="QuestionThree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IsPrimeTemplate.h">
+    <ClInclude Include="MathTemplates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QuestionFive.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BigInt.hpp">
+    <ClInclude Include="InfInt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestionSeven.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestionFour.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -133,7 +133,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Question.cpp" />
     <ClCompile Include="QuestionFive.cpp" />
+    <ClCompile Include="QuestionFour.cpp" />
     <ClCompile Include="QuestionOne.cpp" />
+    <ClCompile Include="QuestionSeven.cpp" />
     <ClCompile Include="QuestionSix.cpp" />
     <ClCompile Include="QuestionSix.h" />
     <ClCompile Include="QuestionThree.cpp" />
@@ -142,13 +144,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BealCalculator.h" />
-    <ClInclude Include="BigInt.hpp" />
     <ClInclude Include="CommandLineManager.h" />
     <ClInclude Include="FileOperator.h" />
-    <ClInclude Include="IsPrimeTemplate.h" />
+    <ClInclude Include="InfInt.h" />
+    <ClInclude Include="MathTemplates.h" />
     <ClInclude Include="Question.h" />
     <ClInclude Include="QuestionFive.h" />
+    <ClInclude Include="QuestionFour.h" />
     <ClInclude Include="QuestionOne.h" />
+    <ClInclude Include="QuestionSeven.h" />
     <ClInclude Include="QuestionThree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -18,7 +18,7 @@ void QuestionSix::findAnswer(){
     
     calculateBNTsInThreads(squareNumbers, _answers);
 }
-//2^n-1 + 2^n-1 = 2^n
+//2^n + 2^n = 2^n+1
 bool QuestionSix::isNumberInFormatPowerOfTwo(int squareNumber){
     return (squareNumber - 7) % 3 == 0;
 }

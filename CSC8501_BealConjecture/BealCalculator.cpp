@@ -2,9 +2,12 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
-#include "BigInt.hpp"
+#include "InfInt.h"
+#include "MathTemplates.h"
+#include <thread>
+#include <future>
 
-BealData::BealData(int A, int B, int C, int x, int y, int z){
+BealData::BealData(int A, int B, int C, int x, int y, int z) {
 	this->A = A;
 	this->B = B;
 	this->C = C;
@@ -18,161 +21,278 @@ int BealData::getBealTotalNumber() const
 	return A + B + C + x + y + z;
 }
 
-void BealData::printBealData(){
-	std::cout << this->A + this-> B + this->C + this->x + this-> y + this->z << " : ";
+void BealData::printBealData() {
+	std::cout << this->A + this->B + this->C + this->x + this->y + this->z << " : ";
 	std::cout << this->A << ", " << this->B << ", " << this->C << ", " << this->x << ", " << this->y << ", " << this->z << std::endl;
 }
 
-bool BealData::operator==(const BealData& other) const{
+bool BealData::operator==(const BealData& other) const {
 	int bnt = getBealTotalNumber();
 	int otherBnt = other.getBealTotalNumber();
 	return bnt == otherBnt;
- }
-
-BealCalculator::BealCalculator()
-{
 }
 
-bool BealCalculator::haveCommonPrimeFactor(int numOne, int numTwo){
-	while (numTwo != 0) {
-		int temp = numTwo;
-		numTwo = numOne % numTwo;
-		numOne = temp;
-	}
-	return numOne > 1;
+BealCalculator::BealCalculator(){
 }
 
-bool BealCalculator::haveCommonPrimeFactor(BigInt& numOne, BigInt& numTwo){
+bool BealCalculator::isNumberSetFitsBealConjecture(int A, int B, int C, int x, int y, int z) {
 	
-	while (numTwo != 0) {
-		BigInt temp = numTwo;
-		numTwo = numOne % numTwo;
-		numOne = temp;
-	}
-	return numOne > 1;
-}
-
-bool BealCalculator::isNumberSetFitsBealConjecture(int A, int B, int C, int x, int y, int z){
-	long long maxLongLongValue = std::numeric_limits<long long>::max();
-	double logMaxLongLong = log(maxLongLongValue);
-
-	if (isOverflowHappeningInPow(A,x) || isOverflowHappeningInPow(B,y) || isOverflowHappeningInPow(C,z)){
+	if (isOverflowHappeningInPow(A, x) || isOverflowHappeningInPow(B, y) || isOverflowHappeningInPow(C, z)) {
 		return isNumberSetFitsBealConjectureBigInt(A, B, C, x, y, z);
 	}
-	unsigned long long ax = pow(A, x);
-	unsigned long long by = pow(B, y);
-	if (!isOverflowHappeningInSum(ax,by)){
-		unsigned long long axby = ax + by;
-		unsigned long long cz = pow(C, z);
+	long long ax = getPow(A, x);
+	long long by = getPow(B, y);
+	if (!isOverflowHappeningInSum(ax, by)) {
+		long long axby = ax + by;
+		long long cz = getPow(C, z);
 
 		return axby == cz;
 	}
 
 	return isNumberSetFitsBealConjectureBigInt(A, B, C, x, y, z);
-
 }
 
-bool BealCalculator::isNumberSetFitsBealConjectureBigInt(int A, int B, int C, int x, int y, int z){
-	BigInt bigA = A;
-	BigInt bigB = B;
-	BigInt bigC = C;
+bool BealCalculator::isNumberSetFitsBealConjectureBigInt(int A, int B, int C, int x, int y, int z) {
+	InfInt ax = bigIntPow(A, x);
+	InfInt by = bigIntPow(B, y);
+	InfInt cz = bigIntPow(C, z);
 
-	BigInt axby = pow(bigA, x) + pow(bigB, y);
-	BigInt cz = pow(bigC, z);
+	InfInt axby = ax + by;
 	bool res = axby == cz;
 
 	return res;
 }
 
-bool BealCalculator::isPrimeNumber(int num)
-{
-	bool is_prime = true;
-	if (num == 0 || num == 1) {
-		is_prime = false;
+
+void BealCalculator::startSearchingBNTSMultiThread(std::vector<BealData>& bnts, int minBase, int maxBase, int minExponent, int maxExponent, int bntToFind, bool isBNTMustBeDistinct, bool isSearchingMinimums, bool isBNTMustBeSquare, bool isBNTMustBeComposit, bool isBNTMustBePrime) {
+	std::vector<std::thread> threads;
+	std::vector<std::vector<BealData>> results;
+
+	int threadCount = std::thread::hardware_concurrency();;
+
+	if (threadCount >= maxBase)
+		threadCount = 1;
+	int chunkSize = ceil((maxBase - minBase + 1) / threadCount);
+	int remaining = (maxBase - minBase + 1) % threadCount;
+
+	for (int i = 0; i < threadCount; i++){
+		std::vector<BealData> res;
+		results.push_back(res);
 	}
 
-	for (int i = 2; i <= num / 2; ++i) {
-		if (num % i == 0) {
-			is_prime = false;
-			break;
-		}
+	for (int i = 0; i < threadCount; ++i) {
+		int startBase = minBase + i * chunkSize;
+		int endBase = minBase + (i + 1) * chunkSize + (i == threadCount - 1 ? remaining : 0);
+		threads.emplace_back(&BealCalculator::searchForBNTs, this, std::ref(results[i]), startBase, endBase, minBase, maxBase, minExponent, maxExponent, isBNTMustBeDistinct, isBNTMustBeSquare, isBNTMustBeComposit, isBNTMustBePrime);
 	}
 
-	return is_prime;
+	for (auto& thread : threads) {
+		thread.join();
+	}
+
+	mergeAndRemoveDuplicates(results, bnts, isBNTMustBeDistinct);
+	sortBNTAnswers(bnts);
+	if (isSearchingMinimums) {
+		keepMinNBealData(bnts, bntToFind);
+	}
 }
 
-bool BealCalculator::isCompositeNumber(int num){
-	if (num <= 1) {
-		return false; // 0 and 1 are not composite numbers
-	}
+void BealCalculator::searchForBNTs(std::vector<BealData>& bnts, int currAStart, int currAEnd, int minBase, int maxBase, int minExponent, int maxExponent,
+	bool isBNTMustBeDistinct, bool isBNTMustBeSquare, bool isBNTMustBeComposit, bool isBNTMustBePrime) {
+	
+	for (int A = currAStart; A < currAEnd; A++) {
+		int bRange = isBNTMustBeDistinct ? A : maxBase;
+		for (int B = minBase; B <= bRange; B++) {
+			if (haveCommonPrimeFactor(A, B)) {
+				for (int C = minBase; C <= maxBase; C++) {
+					if (haveCommonPrimeFactor(getGreatestCommonDivisior(A, B), C))
+					{
+						for (int x = minExponent; x <= maxExponent; x++) {
+							for (int y = minExponent; y <= maxExponent; y++) {
+								for (int z = minExponent; z <= maxExponent; z++) {
+									int tempBNT = A + B + C + x + y + z;
+									bool isPrimeCheckOk = !isBNTMustBePrime || (isBNTMustBePrime && isPrime(tempBNT));
+									bool isSquareCheckOk = !isBNTMustBeSquare || (isBNTMustBeSquare && isSquare(tempBNT));
+									bool isCompositeCheckOk = !isBNTMustBeComposit || (isBNTMustBeComposit && isComposite(tempBNT));
+									if (isPrimeCheckOk && isSquareCheckOk && isCompositeCheckOk && isNumberSetFitsBealConjecture(A, B, C, x, y, z)) {
+										BealData bealData(A, B, C, x, y, z);
+										if (A > 10)
+										{
+											int f = 1;
+										}
+										if (isBNTMustBeDistinct) {
+											if (std::find(bnts.begin(), bnts.end(), bealData) == bnts.end()) {
+												bnts.push_back(bealData);
+											}
+										}
+										else
+										{
+											bnts.push_back(bealData);
+										}
 
-	for (int i = 2; i <= num / 2; i++) {
-		if (num % i == 0) {
-			return true; // It has a factor other than 1 and itself, so it's composite
-		}
-	}
-
-	return false; // It's not divisible by any number other than 1 and itself, so it's not composite
-}
-
-bool BealCalculator::isSquareNumber(int num)
-{
-	if (num < 0) {
-		return false;  // Negative numbers cannot be square numbers
-	}
-
-	int squareRoot = static_cast<int>(std::sqrt(num));
-	return squareRoot * squareRoot == num;
-}
-
-void BealCalculator::checkAndAddBNTToMinimumVec(std::vector<BealData>& bnts, BealData& bnt, int maxSize){
-
-	if (std::find(bnts.begin(), bnts.end(), bnt) == bnts.end()) {
-		if (bnts.size() < maxSize) 
-			bnts.push_back(bnt);
-		else
-		{
-			//TODO(eren.degirmenci): remove leak
-			BealData* tempBealData = nullptr;
-			for (int i = 0; i < maxSize; i++) {
-				if (tempBealData == nullptr && bnts[i].getBealTotalNumber() > bnt.getBealTotalNumber()) {
-					tempBealData = new BealData (bnts[i].A, bnts[i].B, bnts[i].C, bnts[i].x, bnts[i].y, bnts[i].z);
-					bnts[i] = bnt;
+									}
+								}
+							}
+						}
+					}
 				}
-				else if (tempBealData != nullptr && bnts[i].getBealTotalNumber() > tempBealData->getBealTotalNumber()) {
-					BealData* newTempBealData = new BealData(bnts[i].A, bnts[i].B, bnts[i].C, bnts[i].x, bnts[i].y, bnts[i].z);
-					bnts[i] = (*tempBealData);
-					tempBealData = newTempBealData;
+			}
+
+		}
+	}
+
+}
+
+std::map<int, int> BealCalculator::searchForBNTsWithFrequency(std::vector<BealData>& answers, int currAStart, int currAEnd, int minBase, int maxBase, int minExponent, int maxExponent, int minBNTValue, int maxBNTValue) {
+	std::map<int, int> bntFrequencyMap;
+	for (int A = currAStart; A < currAEnd; A++) {
+		for (int B = minBase; B <= maxBase; B++) {
+			if (haveCommonPrimeFactor(A, B)) {
+				for (int C = minBase; C <= maxBase; C++) {
+					if (haveCommonPrimeFactor(getGreatestCommonDivisior(A, B), C)) {
+						for (int x = minExponent; x <= maxExponent; x++) {
+							for (int y = minExponent; y <= maxExponent; y++) {
+								for (int z = minExponent; z <= maxExponent; z++) {
+									int tempBNT = A + B + C + x + y + z;
+									if (tempBNT >= minBNTValue && tempBNT <= maxBNTValue && isNumberSetFitsBealConjecture(A, B, C, x, y, z)) {
+										BealData bealData(A, B, C, x, y, z);
+										if (bntFrequencyMap.count(tempBNT) > 0) {
+											bntFrequencyMap[tempBNT] += 1;
+										}
+										else {
+											bntFrequencyMap.insert(std::make_pair(tempBNT, 1));
+											answers.push_back(bealData);
+										}
+									}
+
+								}
+							}
+						}
+					}
 				}
 			}
 		}
 	}
-	else
-		return;
+
+	
+
+	return bntFrequencyMap;
 }
 
-int BealCalculator::calculateBealTotalNumber(BealData& data){
+void BealCalculator::addPowData(int base, int exponent, InfInt result) {
+	PowData* powData = new PowData();
+	powData->base = base;
+	powData->exponent = exponent;
+	powData->result = result;
+	if (powData != nullptr) {
+		_calculatedPowDatas.push_back(powData);
+	}
+}
+
+std::map<int, int> BealCalculator::searchForBNTsWithFrequencyMultiThread(std::vector<BealData>& answers, int minBase, int maxBase, int minExponent, int maxExponent, int minBNTValue, int maxBNTValue) {
+
+	std::vector<std::future<std::map<int, int>>> futures;
+	std::map<int, int> bntFrequencyMap;
+
+	int threadCount = std::thread::hardware_concurrency();
+
+	int chunkSize = (maxBase - minBase + 1) / threadCount;
+	int remaining = (maxBase - minBase + 1) % threadCount;
+
+	for (int i = 0; i < threadCount; ++i) {
+		int startBase = (minBase + i * chunkSize);
+		int endBase = minBase + (i + 1) * chunkSize + (i == threadCount - 1 ? remaining : 0);
+		futures.push_back(std::async(&BealCalculator::searchForBNTsWithFrequency, this, std::ref(answers), startBase, endBase, minBase, maxBase, minExponent, maxExponent, minBNTValue, maxBNTValue));
+	}
+
+	for (auto& future : futures) {
+		std::map<int, int> result = future.get();
+		for (const auto& entry : result) {
+			bntFrequencyMap[entry.first] += entry.second;
+		}
+	}
+
+	sortBNTAnswers(answers);
+
+	return bntFrequencyMap;
+}
+
+int BealCalculator::calculateBealTotalNumber(BealData& data) {
 	return data.A + data.B + data.C + data.x + data.y + data.z;
 }
 
-int BealCalculator::getGreatestCommonDivisior(int numOne, int numTwo){
-	while (numTwo != 0) {
-		int temp = numTwo;
-		numTwo = numOne % numTwo;
-		numOne = temp;
+PowData* BealCalculator::getCalculatedPowData(int base, int exponent){
+	for (auto powData : _calculatedPowDatas) {
+		if (powData->base == base && powData->exponent == exponent) {
+			return powData;
+		}
 	}
-	return numOne;
+	return nullptr;
 }
 
-bool BealCalculator::isOverflowHappeningInPow(int base, int exponent){
+void BealCalculator::sortBNTAnswers(std::vector<BealData>& answers) {
+	std::sort(answers.begin(), answers.end(), [](const BealData& a, const BealData& b) {
+		return a.getBealTotalNumber() < b.getBealTotalNumber();
+	});
+}
+
+void BealCalculator::keepMinNBealData(std::vector<BealData>& answers, int bntCount) {
+	if (bntCount >= answers.size()) {
+		return;
+	}
+	answers.erase(answers.begin() + bntCount, answers.end());
+}
+
+void BealCalculator::mergeAndRemoveDuplicates(const std::vector<std::vector<BealData>>& input, std::vector<BealData>& answers, bool isBntMustBeDistinct){
+	for (const std::vector<BealData>& innerVector : input) {
+		for (const BealData& data : innerVector) {
+			bool isOkayToAdd = !isBntMustBeDistinct || (isBntMustBeDistinct && std::find(answers.begin(), answers.end(), data) == answers.end());
+			if (isOkayToAdd) {
+				answers.push_back(data);
+			}
+		}
+	}
+}
+
+PowData* BealCalculator::getPowData(int base, int exponent) {
+	for (PowData* data : _calculatedPowDatas) {
+		if (data->base == base && data->exponent == exponent) {
+			return data;
+		}
+	}
+	return nullptr;
+}
+
+InfInt BealCalculator::bigIntPow(int base, int exponent) {
+
+	InfInt res = 1;
+	for (int i = 0; i < exponent; i++) {
+		(res) *= base;
+	}
+	return res;
+	//TODO: Needs fix for multi-thread solution.
+	/*PowData* data = getPowData(base, exponent);
+	if (data == nullptr) {
+		InfInt res = 1;
+		for (int i = 0; i <= exponent; i++) {
+			(res) *= base;
+		}
+		addPowData(base, exponent, res);
+		return res;
+	}
+	return data->result;
+	*/
+}
+
+bool BealCalculator::isOverflowHappeningInPow(int base, int exponent) {
 	int iteration = 0;
 	long long baseConversion = base;
 	long long result = base;
-	while (iteration != exponent){
+	while (iteration != (exponent -1)) {
 		long long tempRes = result;
 		result *= baseConversion;
 
-		if (result / baseConversion != tempRes){
+		if (result / baseConversion != tempRes) {
 			return true;
 		}
 		iteration++;
@@ -180,10 +300,10 @@ bool BealCalculator::isOverflowHappeningInPow(int base, int exponent){
 	return false;
 }
 
-bool BealCalculator::isOverflowHappeningInSum(int firstNum, int secondNum){
-	if (firstNum == 0 || secondNum == 0){
+bool BealCalculator::isOverflowHappeningInSum(int firstNum, int secondNum) {
+	if (firstNum == 0 || secondNum == 0) {
 		return false;
 	}
 	int sum = firstNum + secondNum;
-	return sum - firstNum == secondNum;
+	return sum - firstNum != secondNum;
 }
