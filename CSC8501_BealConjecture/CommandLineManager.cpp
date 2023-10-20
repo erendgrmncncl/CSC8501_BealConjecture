@@ -9,6 +9,7 @@
 #include "QuestionFive.h"
 #include "QuestionSix.h"
 #include "QuestionSeven.h"
+#include "QuestionEight.h"
 #include "FileOperator.h"
 #include <algorithm>
 #include <functional>
@@ -44,7 +45,7 @@ void CommandLineManager::initQuestionInitMap(){
 		{5, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionFive(questionText, choices, calculator);}},
 		{6, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionSix(questionText, choices, calculator);}},
 		{7, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionSeven(questionText, choices, calculator);}},
-		{8, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionOne(questionText, choices, calculator);}}
+		{8, [](const char* questionText, std::vector<const char*>& choices, BealCalculator& calculator) -> Question* {return new QuestionEight(questionText, choices, calculator);}}
 	};
 }
 

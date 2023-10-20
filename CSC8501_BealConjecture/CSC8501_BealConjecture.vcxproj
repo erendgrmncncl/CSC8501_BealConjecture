@@ -132,6 +132,7 @@
     <ClCompile Include="FileOperator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Question.cpp" />
+    <ClCompile Include="QuestionEight.cpp" />
     <ClCompile Include="QuestionFive.cpp" />
     <ClCompile Include="QuestionFour.cpp" />
     <ClCompile Include="QuestionOne.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="InfInt.h" />
     <ClInclude Include="MathTemplates.h" />
     <ClInclude Include="Question.h" />
+    <ClInclude Include="QuestionEight.h" />
     <ClInclude Include="QuestionFive.h" />
     <ClInclude Include="QuestionFour.h" />
     <ClInclude Include="QuestionOne.h" />
