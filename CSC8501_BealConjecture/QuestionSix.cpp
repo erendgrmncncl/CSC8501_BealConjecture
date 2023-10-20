@@ -91,7 +91,7 @@ std::vector<int> QuestionSix::findSquareNumbersInRange(int start, int end){
     start = std::max(0, start);
 
     for (int i = start; i <= end; i++) {
-        int root = static_cast<int>(std::sqrt(i));
+        double root = std::sqrt(i);
         if (root * root == i) {
             squareNumbers.push_back(i);
         }
