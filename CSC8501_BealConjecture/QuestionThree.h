@@ -1,3 +1,14 @@
+/**
+ * @file QuestionThree.h
+ *
+ * @brief QuestionThree class decleration.
+ *
+ *
+ * @author Salih Eren Degirmenci
+ * Contact: S.E.Degirmenci2@newcastle.ac.uk
+ */
+
+
 #pragma once
 
 #include "Question.h"

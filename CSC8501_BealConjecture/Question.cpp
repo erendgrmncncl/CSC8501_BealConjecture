@@ -24,7 +24,7 @@ const char* Question::getQuestionText(){
     return _questionText;
 }
 
-std::vector<BealData*>& Question::getAnswers(){
+std::vector<BealData>& Question::getAnswers(){
     return _answers;
 }
 
@@ -38,7 +38,7 @@ void Question::parseAnswerTextToBealData(const char* answersText){
         &values[A_INDEX], &values[X_INDEX], &values[B_INDEX],
         &values[Y_INDEX], &values[C_INDEX], &values[Z_INDEX]);
     
-    BealData* answer = new BealData(values[A_INDEX], values[X_INDEX], values[B_INDEX], values[Y_INDEX], values[C_INDEX], values[Z_INDEX]);
+    BealData answer(values[A_INDEX], values[X_INDEX], values[B_INDEX], values[Y_INDEX], values[C_INDEX], values[Z_INDEX]);
     _answers.push_back(answer);
 }
 
